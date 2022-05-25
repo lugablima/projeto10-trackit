@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
-import bob_esponja from "../assets/img/bob_esponja.svg";
+import { useContext } from "react";
+import UserContext from "../contexts/UserContext";
 
 export default function Header() {
     const location = useLocation();
+    const { userInfo } = useContext(UserContext);
 
     function RenderHeader() {
         if(location.pathname === "/" || location.pathname === "/cadastro") {
@@ -11,7 +13,7 @@ export default function Header() {
         } else {
             return (<Container>
                         <h1>TrackIt</h1>
-                        <img src={bob_esponja} alt="Bob Esponja" />
+                        <img src={userInfo.photo} alt="Usúario do TrackIt" />
                     </Container>
                     );
         }

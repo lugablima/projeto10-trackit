@@ -11,6 +11,7 @@ import HistoryPage from "./HistoryPage";
 
 export default function App() {
   const [userInfo, setUserInfo] = useState({photo: "", token: ""});
+  // console.log(userInfo);
   return (
     <>
       <GlobalStyle />

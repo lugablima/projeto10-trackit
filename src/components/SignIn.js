@@ -5,36 +5,40 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
 import logo from "../assets/img/logo.svg";
+import validateEmail from "../functions/validateEmail";
 
 export default function SignIn() {
   const [inputs, setInputs] = useState({ email: "", password: "" });
-  // const [userData, setUserData] = useState({});
-  const { userInfo, setUserInfo } = useContext(UserContext);
+  const { setUserInfo } = useContext(UserContext);
   const [isDisabled, setIsDisabled] = useState(false);
   const navigate = useNavigate();
 
   function handleForm(event) {
     event.preventDefault();
-    setIsDisabled(true);
-    const API = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
-    
-    const body = {
-      email: inputs.email,
-      password: inputs.password,
-    };
+    if (validateEmail(inputs.email)) {
+      setIsDisabled(true);
+      const API = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
 
-    const promise = axios.post(API, body);
-    promise
-      .then((response) => {
-        // setUserData(response.data);
-        setUserInfo({ ...userInfo, token: response.data.token });
-        navigate("/hoje");
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("Login incorreto, tente novamente!");
-        setIsDisabled(false);
-      });
+      const body = {
+        email: inputs.email,
+        password: inputs.password,
+      };
+
+      const promise = axios.post(API, body);
+      promise
+        .then((response) => {
+          // console.log(response.data);
+          setUserInfo({photo: response.data.image, token: response.data.token});
+          navigate("/hoje");
+        })
+        .catch((error) => {
+          // console.log(error);
+          alert(error.response.data.message);
+          setIsDisabled(false);
+        });
+    } else {
+      alert("Email inválido, tente novamente!");
+    }
   }
 
   return (
@@ -57,7 +61,9 @@ export default function SignIn() {
           placeholder="senha"
           onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
         />
-        <button disabled={isDisabled}>{isDisabled ? <ThreeDots color="#ffffff" width={51} height={51} /> : "Entrar"}</button>
+        <button disabled={isDisabled}>
+          {isDisabled ? <ThreeDots color="#ffffff" width={51} height={51} /> : "Entrar"}
+        </button>
       </form>
       <Link to="/cadastro">
         <h6>Não tem uma conta? Cadastre-se!</h6>

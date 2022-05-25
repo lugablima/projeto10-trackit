@@ -4,37 +4,49 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
 import logo from "../assets/img/logo.svg";
+import validateEmail from "../functions/validateEmail";
+import validateName from "../functions/validateName";
+import validatePhoto from "../functions/validatePhoto";
 
 export default function SignUp() {
   const [inputs, setInputs] = useState({ email: "", name: "", image: "", password: "" });
-  // const [userData, setUserData] = useState({});
   const [isDisabled, setIsDisabled] = useState(false);
   const navigate = useNavigate();
 
   function handleForm(event) {
     event.preventDefault();
-    setIsDisabled(true);
-    const API = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up";
+    if (validateEmail(inputs.email)) {
+      if (validateName(inputs.name)) {
+        if (validatePhoto(inputs.image)) {
+          setIsDisabled(true);
+          const API = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up";
 
-    const body = {
-      email: inputs.email,
-      name: inputs.name,
-      image: inputs.image,
-      password: inputs.password,
-    };
+          const body = {
+            email: inputs.email,
+            name: inputs.name,
+            image: inputs.image,
+            password: inputs.password,
+          };
 
-    const promise = axios.post(API, body);
-    promise
-      .then((response) => {
-        // setUserData(response.data);
-        // setUserInfo({ ...userInfo, token: response.data.token });
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("Dados incorretos, tente novamente!");
-        setIsDisabled(false);
-      });
+          const promise = axios.post(API, body);
+          promise
+            .then((response) => {
+              navigate("/");
+            })
+            .catch((error) => {
+              console.log(error);
+              alert(error.response.data.message);
+              setIsDisabled(false);
+            });
+        } else {
+          alert("URL da foto inválida, tente novamente!");
+        }
+      } else {
+        alert("Nome inválido, tente novamente!");
+      }
+    } else {
+      alert("Email inválido, tente novamente!");
+    }
   }
 
   return (
