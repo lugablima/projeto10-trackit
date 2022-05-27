@@ -60,6 +60,10 @@ body,
   overflow-y: auto;
 }
 
+.root {
+	background: #f2f2f2;
+}
+
 a {
   text-decoration: none;
 }

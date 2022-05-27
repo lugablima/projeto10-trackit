@@ -8,15 +8,16 @@ import SignUp from "./SignUp";
 import HabitsPage from "./HabitsPage";
 import PageToday from "./PageToday";
 import HistoryPage from "./HistoryPage";
+import Menu from "./Menu";
 
 export default function App() {
-  const [userInfo, setUserInfo] = useState({photo: "", token: ""});
+  const [userInfo, setUserInfo] = useState({ photo: "", token: "" });
   // console.log(userInfo);
   return (
     <>
       <GlobalStyle />
       <BrowserRouter>
-        <UserContext.Provider value={{userInfo, setUserInfo}}>
+        <UserContext.Provider value={{ userInfo, setUserInfo }}>
           <Header />
           <Routes>
             <Route path="/" element={<SignIn />} />
@@ -25,6 +26,7 @@ export default function App() {
             <Route path="/hoje" element={<PageToday />} />
             <Route path="/historico" element={<HistoryPage />} />
           </Routes>
+          <Menu />
         </UserContext.Provider>
       </BrowserRouter>
     </>
