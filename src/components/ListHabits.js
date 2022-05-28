@@ -5,10 +5,12 @@ import axios from "axios";
 import daysWeek from "../functions/daysWeek";
 import { IoTrashOutline } from "react-icons/io5";
 import { IconContext } from "react-icons";
+import UpdateHabitsListContext from "../contexts/UpdateHabitsListContext";
 
 
-function Habit({ habit, updateHabitsList, setUpdateHabitsList }) {
+function Habit({ habit }) {
   const { userInfo } = useContext(UserContext);
+  const { updateHabitsList, setUpdateHabitsList } = useContext(UpdateHabitsListContext);
 
   function DaysSelected(day, index) {
     if (habit.days.some((value) => value === day.idDay))
@@ -59,11 +61,11 @@ function Habit({ habit, updateHabitsList, setUpdateHabitsList }) {
   );
 }
 
-export default function ListHabits({ habits, updateHabitsList, setUpdateHabitsList }) {
+export default function ListHabits({ habits }) {
   return (
     <Container>
       {habits.map((habit, index) => (
-        <Habit key={index} habit={habit} updateHabitsList={updateHabitsList} setUpdateHabitsList={setUpdateHabitsList} />
+        <Habit key={index} habit={habit} />
       ))}
     </Container>
   );

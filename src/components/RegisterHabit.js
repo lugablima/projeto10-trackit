@@ -4,14 +4,9 @@ import axios from "axios";
 import UserContext from "../contexts/UserContext";
 import daysWeek from "../functions/daysWeek";
 import { ThreeDots } from "react-loader-spinner";
+import UpdateHabitsListContext from "../contexts/UpdateHabitsListContext";
 
 function Day({ idDay, day, isSelected, disabled, days, setDays }) {
-  // function selectDays(day) {
-  //   if (day.idDay === idDay) {
-  //     day.isSelected = !day.isSelected;
-  //   }
-  //   return day;
-  // }
 
   function selectDay() {
     setDays(
@@ -31,9 +26,10 @@ function Day({ idDay, day, isSelected, disabled, days, setDays }) {
   );
 }
 
-export default function RegisterHabit({ setShowForm, habitName, setHabitName, days, setDays, updateHabitsList, setUpdateHabitsList }) {
+export default function RegisterHabit({ setShowForm, habitName, setHabitName, days, setDays }) {
   const [isDisabled, setIsDisabled] = useState(false);
   const { userInfo } = useContext(UserContext);
+  const { updateHabitsList, setUpdateHabitsList } = useContext(UpdateHabitsListContext);
 
   function handleForm(event) {
     event.preventDefault();

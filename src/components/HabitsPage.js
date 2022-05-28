@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useState, useEffect, useContext } from "react";
 import UserContext from "../contexts/UserContext";
+import UpdateHabitsListContext from "../contexts/UpdateHabitsListContext";
 import axios from "axios";
 import RegisterHabit from "./RegisterHabit";
 import daysWeek from "../functions/daysWeek";
@@ -10,7 +11,7 @@ import ListHabits from "./ListHabits";
 export default function HabitsPage() {
   const { userInfo } = useContext(UserContext);
   const [habits, setHabits] = useState(null);
-  const [updateHabitsList, setUpdateHabitsList] = useState(false);
+  const { updateHabitsList } = useContext(UpdateHabitsListContext);
   const [habitName, setHabitName] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [days, setDays] = useState(daysWeek.map((day) => ({ ...day })));
@@ -42,7 +43,7 @@ export default function HabitsPage() {
       return (
         <NoHabit>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</NoHabit>
       );
-    else return <ListHabits habits={habits} updateHabitsList={updateHabitsList} setUpdateHabitsList={setUpdateHabitsList} />;
+    else return <ListHabits habits={habits} />;
   }
 
   const content = RenderContent();
@@ -62,8 +63,6 @@ export default function HabitsPage() {
           setHabitName={setHabitName}
           days={days}
           setDays={setDays}
-          updateHabitsList={updateHabitsList}
-          setUpdateHabitsList={setUpdateHabitsList}
         />
       ) : (
         <></>
