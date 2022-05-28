@@ -4,38 +4,39 @@ import axios from "axios";
 import UserContext from "../contexts/UserContext";
 import daysWeek from "../functions/daysWeek";
 import { ThreeDots } from "react-loader-spinner";
-import UpdateHabitsListContext from "../contexts/UpdateHabitsListContext";
 
-function Day({ idDay, day, isSelected, disabled, days, setDays }) {
+function Day({ idDay, disabled }) {
+  const { newHabit, setNewHabit } = useContext(UserContext);
+
+  const [ day ] = newHabit.days.filter((day) => day.idDay === idDay);
+
+  function setDays(day) {
+    if (day.idDay === idDay) {
+      day.isSelected = !day.isSelected;
+    }      
+    return day;
+  }
 
   function selectDay() {
-    setDays(
-      days.map((day) => {
-        if (day.idDay === idDay) {
-          day.isSelected = !day.isSelected;
-        }
-        return day;
-      })
-    );
+    setNewHabit({ ...newHabit, days: newHabit.days.map(setDays) });
   }
 
   return (
-    <ContainerDay isSelected={isSelected} disabled={disabled} onClick={selectDay}>
-      {day}
+    <ContainerDay isSelected={day.isSelected} disabled={disabled} onClick={selectDay}>
+      {day.name}
     </ContainerDay>
   );
 }
 
-export default function RegisterHabit({ setShowForm, habitName, setHabitName, days, setDays }) {
+export default function RegisterHabit({ setShowForm }) {
   const [isDisabled, setIsDisabled] = useState(false);
-  const { userInfo } = useContext(UserContext);
-  const { updateHabitsList, setUpdateHabitsList } = useContext(UpdateHabitsListContext);
+  const { userInfo, updateHabitsList, setUpdateHabitsList, newHabit, setNewHabit } = useContext(UserContext);
 
   function handleForm(event) {
     event.preventDefault();
     
-    const daysSelected = days.filter((day) => day.isSelected);
-    const name = habitName.trim();
+    const daysSelected = newHabit.days.filter((day) => day.isSelected);
+    const name = newHabit.name.trim();
 
     if (name !== "") {
       if(daysSelected.length !== 0) {
@@ -55,11 +56,10 @@ export default function RegisterHabit({ setShowForm, habitName, setHabitName, da
 
       const promise = axios.post(API, body, config);
       promise
-        .then((response) => {
+        .then(() => {
           console.log(body);
           setIsDisabled(false);
-          setHabitName("");
-          setDays(daysWeek.map((day) => ({ ...day })));
+          setNewHabit({name: "", days: daysWeek.map((day) => ({ ...day }))});
           setShowForm(false);
           setUpdateHabitsList(!updateHabitsList);
         })
@@ -81,21 +81,17 @@ export default function RegisterHabit({ setShowForm, habitName, setHabitName, da
         <input
           type="text"
           required
-          value={habitName}
+          value={newHabit.name}
           disabled={isDisabled}
           placeholder="nome do hábito"
-          onChange={(e) => setHabitName(e.target.value)}
+          onChange={(e) => setNewHabit({ ...newHabit, name: e.target.value })}
         />
         <WeekDays>
-          {days.map((day, index) => (
+          {newHabit.days.map((day, index) => (
             <Day
               key={index}
               idDay={day.idDay}
-              day={day.name}
-              isSelected={day.isSelected}
               disabled={isDisabled}
-              days={days}
-              setDays={setDays}
             />
           ))}
         </WeekDays>
@@ -111,6 +107,111 @@ export default function RegisterHabit({ setShowForm, habitName, setHabitName, da
     </Container>
   );
 }
+
+// function Day({ idDay, day, isSelected, disabled, days, setDays }) {
+
+//   function selectDay() {
+//     setDays(
+//       days.map((day) => {
+//         if (day.idDay === idDay) {
+//           day.isSelected = !day.isSelected;
+//         }
+//         return day;
+//       })
+//     );
+//   }
+
+//   return (
+//     <ContainerDay isSelected={isSelected} disabled={disabled} onClick={selectDay}>
+//       {day}
+//     </ContainerDay>
+//   );
+// }
+
+// export default function RegisterHabit({ setShowForm, habitName, setHabitName, days, setDays }) {
+//   const [isDisabled, setIsDisabled] = useState(false);
+//   const { userInfo, updateHabitsList, setUpdateHabitsList } = useContext(UserContext);
+
+//   function handleForm(event) {
+//     event.preventDefault();
+    
+//     const daysSelected = days.filter((day) => day.isSelected);
+//     const name = habitName.trim();
+
+//     if (name !== "") {
+//       if(daysSelected.length !== 0) {
+//       setIsDisabled(true);
+//       const API = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
+
+//       const body = {
+//         name: name,
+//         days: daysSelected.map((day) => day.idDay),
+//       };
+
+//       const config = {
+//         headers: {
+//           Authorization: `Bearer ${userInfo.token}`,
+//         },
+//       };
+
+//       const promise = axios.post(API, body, config);
+//       promise
+//         .then((response) => {
+//           console.log(body);
+//           setIsDisabled(false);
+//           setHabitName("");
+//           setDays(daysWeek.map((day) => ({ ...day })));
+//           setShowForm(false);
+//           setUpdateHabitsList(!updateHabitsList);
+//         })
+//         .catch((error) => {
+//           setIsDisabled(false);
+//           alert(error.response.data.message);
+//         });
+//       } else {
+//         alert("Selecione pelo menos um dia da semana!");
+//       }
+//     } else {
+//       alert("Digite o nome do hábito!");
+//     }
+//   }
+
+//   return (
+//     <Container>
+//       <form onSubmit={handleForm}>
+//         <input
+//           type="text"
+//           required
+//           value={habitName}
+//           disabled={isDisabled}
+//           placeholder="nome do hábito"
+//           onChange={(e) => setHabitName(e.target.value)}
+//         />
+//         <WeekDays>
+//           {days.map((day, index) => (
+//             <Day
+//               key={index}
+//               idDay={day.idDay}
+//               day={day.name}
+//               isSelected={day.isSelected}
+//               disabled={isDisabled}
+//               days={days}
+//               setDays={setDays}
+//             />
+//           ))}
+//         </WeekDays>
+//         <Buttons>
+//           <button disabled={isDisabled}>
+//             {isDisabled ? <ThreeDots color="#ffffff" width={43.01} height={43.01} /> : "Salvar"}
+//           </button>
+//           <h6 disabled={isDisabled} onClick={() => setShowForm(false)}>
+//             Cancelar
+//           </h6>
+//         </Buttons>
+//       </form>
+//     </Container>
+//   );
+// }
 
 const Container = styled.div`
   width: 100%;
@@ -161,7 +262,6 @@ const ContainerDay = styled.p`
   background: ${(props) => (props.isSelected ? "#CFCFCF" : "#ffffff")};
   display: flex;
   justify-content: center;
-  /* align-items: center; */
   font-family: "Lexend Deca", sans-serif;
   font-weight: 400;
   font-size: 19.976px;

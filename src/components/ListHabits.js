@@ -5,12 +5,9 @@ import axios from "axios";
 import daysWeek from "../functions/daysWeek";
 import { IoTrashOutline } from "react-icons/io5";
 import { IconContext } from "react-icons";
-import UpdateHabitsListContext from "../contexts/UpdateHabitsListContext";
-
 
 function Habit({ habit }) {
-  const { userInfo } = useContext(UserContext);
-  const { updateHabitsList, setUpdateHabitsList } = useContext(UpdateHabitsListContext);
+  const { userInfo, updateHabitsList, setUpdateHabitsList } = useContext(UserContext);
 
   function DaysSelected(day, index) {
     if (habit.days.some((value) => value === day.idDay))

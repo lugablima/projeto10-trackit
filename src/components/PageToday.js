@@ -1,8 +1,6 @@
 import styled from "styled-components";
 import { useEffect, useContext } from "react";
 import UserContext from "../contexts/UserContext";
-import HabitsTodayContext from "../contexts/HabitsTodayContext";
-import UpdateHabitsListContext from "../contexts/UpdateHabitsListContext";
 import axios from "axios";
 import { IoCheckbox } from "react-icons/io5";
 import { IconContext } from "react-icons";
@@ -10,8 +8,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 
 function Habit({ habit }) {
-  const { userInfo } = useContext(UserContext);
-  const { updateHabitsList, setUpdateHabitsList } = useContext(UpdateHabitsListContext);
+  const { userInfo, updateHabitsList, setUpdateHabitsList } = useContext(UserContext);
 
   const iconDoneColor = habit.done ? "#8fc549" : "#EBEBEB";
   const currentSequenceColor = habit.done ? "#8fc549" : "#666666";
@@ -68,9 +65,7 @@ function Habit({ habit }) {
 }
 
 export default function PageToday() {
-  const { userInfo } = useContext(UserContext);
-  const { habitsToday, setHabitsToday } = useContext(HabitsTodayContext);
-  const { updateHabitsList } = useContext(UpdateHabitsListContext);
+  const { userInfo, habitsToday, setHabitsToday, updateHabitsList } = useContext(UserContext);
 
   let updateLocale = require("dayjs/plugin/updateLocale");
   dayjs.extend(updateLocale);

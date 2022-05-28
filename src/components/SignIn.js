@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import UserContext from "../contexts/UserContext";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,6 +12,41 @@ export default function SignIn() {
   const { setUserInfo } = useContext(UserContext);
   const [isDisabled, setIsDisabled] = useState(false);
   const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   let userInfos = localStorage.getItem("userInfos");
+  //   if(userInfos !== null) {
+  //     userInfos = JSON.parse(userInfos);
+  //     const API = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
+
+  //     const body = {
+  //       email: userInfos.email,
+  //       password: userInfos.password,
+  //     };
+
+  //     const promise = axios.post(API, body);
+  //     promise
+  //       .then((response) => {
+  //         setUserInfo({photo: response.data.image, token: response.data.token});
+  //         console.log("redirecionando...");
+  //         navigate("/hoje");
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   }
+  // },[]);
+
+  useEffect(() => {
+    let userInfos = localStorage.getItem("userInfos");
+    if(userInfos !== null) {
+      userInfos = JSON.parse(userInfos);
+      setUserInfo({photo: userInfos.image, token: userInfos.token});
+      console.log("redirecionando...");
+      navigate("/hoje");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
 
   function handleForm(event) {
     event.preventDefault();
@@ -27,8 +62,11 @@ export default function SignIn() {
       const promise = axios.post(API, body);
       promise
         .then((response) => {
-          // console.log(response.data);
+          const userData = JSON.stringify(response.data);
+          console.log(userData);
+          localStorage.setItem("userInfos", userData);
           setUserInfo({photo: response.data.image, token: response.data.token});
+          // setUserInfo({photo: response.data.image, token: response.data.token});
           navigate("/hoje");
         })
         .catch((error) => {

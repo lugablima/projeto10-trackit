@@ -4,10 +4,10 @@ import "react-circular-progressbar/dist/styles.css";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useContext } from "react";
-import HabitsTodayContext from "../contexts/HabitsTodayContext";
+import UserContext from "../contexts/UserContext";
 
 export default function Menu() {
-  const { habitsToday } = useContext(HabitsTodayContext);
+  const { habitsToday } = useContext(UserContext);
   const location = useLocation();
 
   function updatePercentage() {

@@ -1,20 +1,16 @@
 import styled from "styled-components";
 import { useState, useEffect, useContext } from "react";
 import UserContext from "../contexts/UserContext";
-import UpdateHabitsListContext from "../contexts/UpdateHabitsListContext";
 import axios from "axios";
 import RegisterHabit from "./RegisterHabit";
-import daysWeek from "../functions/daysWeek";
+// import daysWeek from "../functions/daysWeek";
 import plus from "../assets/img/plus.svg";
 import ListHabits from "./ListHabits";
 
 export default function HabitsPage() {
-  const { userInfo } = useContext(UserContext);
+  const { userInfo, updateHabitsList } = useContext(UserContext);
   const [habits, setHabits] = useState(null);
-  const { updateHabitsList } = useContext(UpdateHabitsListContext);
-  const [habitName, setHabitName] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [days, setDays] = useState(daysWeek.map((day) => ({ ...day })));
 
   useEffect(() => {
     const API = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
@@ -59,10 +55,6 @@ export default function HabitsPage() {
       {showForm ? (
         <RegisterHabit
           setShowForm={setShowForm}
-          habitName={habitName}
-          setHabitName={setHabitName}
-          days={days}
-          setDays={setDays}
         />
       ) : (
         <></>
@@ -71,6 +63,69 @@ export default function HabitsPage() {
     </Container>
   );
 }
+
+// export default function HabitsPage() {
+//   const { userInfo, updateHabitsList } = useContext(UserContext);
+//   const [habits, setHabits] = useState(null);
+//   const [habitName, setHabitName] = useState("");
+//   const [showForm, setShowForm] = useState(false);
+//   const [days, setDays] = useState(daysWeek.map((day) => ({ ...day })));
+
+//   useEffect(() => {
+//     const API = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
+
+//     const config = {
+//       headers: {
+//         Authorization: `Bearer ${userInfo.token}`,
+//       },
+//     };
+
+//     const promise = axios.get(API, config);
+//     promise
+//       .then((response) => {
+//         console.log(response);
+//         setHabits(response.data);
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//       });
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [updateHabitsList]);
+
+//   function RenderContent() {
+//     if (habits === null) return <></>;
+//     else if (habits.length === 0)
+//       return (
+//         <NoHabit>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</NoHabit>
+//       );
+//     else return <ListHabits habits={habits} />;
+//   }
+
+//   const content = RenderContent();
+
+//   return (
+//     <Container>
+//       <Header>
+//         <h6>Meus hábitos</h6>
+//         <div onClick={() => setShowForm(true)}>
+//           <img src={plus} alt="Criar novo hábito" />
+//         </div>
+//       </Header>
+//       {showForm ? (
+//         <RegisterHabit
+//           setShowForm={setShowForm}
+//           habitName={habitName}
+//           setHabitName={setHabitName}
+//           days={days}
+//           setDays={setDays}
+//         />
+//       ) : (
+//         <></>
+//       )}
+//       {content}
+//     </Container>
+//   );
+// }
 
 const Container = styled.div`
   width: 100%;
