@@ -4,6 +4,7 @@ import UserContext from "../contexts/UserContext";
 import axios from "axios";
 import { IoCheckbox } from "react-icons/io5";
 import { IconContext } from "react-icons";
+import { ThreeDots } from "react-loader-spinner";
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 
@@ -33,7 +34,7 @@ function Habit({ habit }) {
           setIsDisabled("");
         })
         .catch((error) => {
-          if(error.response.status === 400) {
+          if (error.response.status === 400) {
             alert("O hábito já está marcado!");
           }
           setIsDisabled("");
@@ -50,7 +51,7 @@ function Habit({ habit }) {
           setIsDisabled("");
         })
         .catch((error) => {
-          if(error.response.status === 400) {
+          if (error.response.status === 400) {
             alert("O hábito não está marcado!");
           }
           setIsDisabled("");
@@ -72,7 +73,7 @@ function Habit({ habit }) {
       </p>
       <IconContext.Provider value={{ size: "82px", color: iconDoneColor, title: "Marcar hábito como feito" }}>
         <IonIcon>
-          <IoCheckbox style={{pointerEvents: isDisabled}} onClick={selectHabit} />
+          <IoCheckbox style={{ pointerEvents: isDisabled }} onClick={selectHabit} />
         </IonIcon>
       </IconContext.Provider>
     </ContainerHabit>
@@ -139,8 +140,16 @@ export default function PageToday() {
       <h6>
         {weekDay}, {month}
       </h6>
-      {subtitle}
-      {habits}
+      {habitsToday.length === 0 ? (
+        <LoadingContainer>
+          <ThreeDots color="#ffffff" width={70} height={70} />
+        </LoadingContainer>
+      ) : (
+        <>
+          {subtitle}
+          {habits}
+        </>
+      )}
     </Container>
   );
 }
@@ -152,6 +161,9 @@ const Container = styled.div`
   padding: 28px 17px 31px;
   font-family: "Lexend Deca", sans-serif;
   font-weight: 400;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 
   & > h6 {
     font-size: 22.976px;
@@ -195,4 +207,9 @@ const IonIcon = styled.div`
   top: 6px;
   right: 6px;
   cursor: pointer;
+`;
+
+const LoadingContainer = styled.div`
+  margin-top: 50%;
+  align-self: center;
 `;

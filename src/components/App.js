@@ -42,7 +42,6 @@ export default function App() {
             newHabit, 
             setNewHabit,
             progress,
-            setProgress,
             updateProgress,
           }}
         >

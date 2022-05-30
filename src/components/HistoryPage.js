@@ -6,6 +6,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import dayjs from "dayjs";
 import HistoryDay from "./HistoryDay";
+import { ThreeDots } from "react-loader-spinner";
 
 export default function HistoryPage() {
   const { userInfo } = useContext(UserContext);
@@ -28,7 +29,7 @@ export default function HistoryPage() {
       .catch((error) => {
         alert(error.response.data.message);
       });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function formatDate(date, format) {
@@ -37,19 +38,19 @@ export default function HistoryPage() {
 
   function formatTile(date, view) {
     if (view === "month" && historyHabits.length !== 0) {
-      const [ objHabit ] = historyHabits.filter((value) => value.day === dayjs(date).format("DD/MM/YYYY"));
-      if(objHabit !== undefined) {
+      const [objHabit] = historyHabits.filter((value) => value.day === dayjs(date).format("DD/MM/YYYY"));
+      if (objHabit !== undefined) {
         const isConcluded = objHabit.habits.every((hab) => hab.done === true);
-        if(isConcluded) return ["tile", "tile-concluded"];
-        else return ["tile", "tile-not-concluded"]; 
+        if (isConcluded) return ["tile", "tile-concluded"];
+        else return ["tile", "tile-not-concluded"];
       }
     }
     return "";
   }
 
   function onClickDay(value) {
-    const [ objHabit ] = historyHabits.filter((obj) => obj.day === dayjs(value).format("DD/MM/YYYY"));
-    if(objHabit !== undefined) {
+    const [objHabit] = historyHabits.filter((obj) => obj.day === dayjs(value).format("DD/MM/YYYY"));
+    if (objHabit !== undefined) {
       setHistoryDay(objHabit);
     }
   }
@@ -57,18 +58,23 @@ export default function HistoryPage() {
   return (
     <Container>
       <h6>Histórico</h6>
-      {historyHabits.length === 0 ? null :
-      <CalendarContainer>
-        <Calendar
-          calendarType="US"
-          onChange={onChange}
-          value={value}
-          locale={"pt"}
-          formatDay={(locale, date) => formatDate(date, "DD")}
-          tileClassName={({ date, view }) => formatTile(date, view)}
-          onClickDay={onClickDay}
-        />
-      </CalendarContainer>}
+      {historyHabits.length === 0 ? (
+        <LoadingContainer>
+          <ThreeDots color="#ffffff" width={70} height={70} />
+        </LoadingContainer>
+      ) : (
+        <CalendarContainer>
+          <Calendar
+            calendarType="US"
+            onChange={onChange}
+            value={value}
+            locale={"pt"}
+            formatDay={(locale, date) => formatDate(date, "DD")}
+            tileClassName={({ date, view }) => formatTile(date, view)}
+            onClickDay={onClickDay}
+          />
+        </CalendarContainer>
+      )}
       {historyDay ? <HistoryDay history={historyDay} setHistoryDay={setHistoryDay} /> : <></>}
     </Container>
   );
@@ -81,6 +87,9 @@ const Container = styled.div`
   padding: 28px 21px 57px 19px;
   font-family: "Lexend Deca", sans-serif;
   font-weight: 400;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 
   & > h6 {
     font-size: 22.976px;
@@ -96,7 +105,6 @@ const CalendarContainer = styled.div`
 
   .react-calendar {
     width: 100%;
-    /* height: 402px; */
     border: none;
     border-radius: 10px;
   }
@@ -114,4 +122,9 @@ const CalendarContainer = styled.div`
   .tile-not-concluded {
     background-color: red;
   }
+`;
+
+const LoadingContainer = styled.div`
+  margin-top: 50%;
+  align-self: center; 
 `;

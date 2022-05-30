@@ -4,6 +4,7 @@ import UserContext from "../contexts/UserContext";
 import axios from "axios";
 import RegisterHabit from "./RegisterHabit";
 import plus from "../assets/img/plus.svg";
+import { ThreeDots } from "react-loader-spinner";
 import ListHabits from "./ListHabits";
 
 export default function HabitsPage() {
@@ -70,14 +71,14 @@ export default function HabitsPage() {
           <img src={plus} alt="Criar novo hábito" />
         </div>
       </Header>
-      {showForm ? (
-        <RegisterHabit
-          setShowForm={setShowForm}
-        />
+      {showForm ? <RegisterHabit setShowForm={setShowForm} /> : <></>}
+      {habits ? (
+        content
       ) : (
-        <></>
+        <LoadingContainer>
+          <ThreeDots color="#ffffff" width={70} height={70} />
+        </LoadingContainer>
       )}
-      {content}
     </Container>
   );
 }
@@ -90,6 +91,9 @@ const Container = styled.div`
   font-family: "Lexend Deca", sans-serif;
   font-weight: 400;
   background: #f2f2f2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 `;
 
 const Header = styled.div`
@@ -130,4 +134,9 @@ const NoHabit = styled.h6`
   font-size: 17.976px;
   line-height: 22px;
   color: #666666;
+`;
+
+const LoadingContainer = styled.div`
+  margin-top: 50%;
+  align-self: center; 
 `;
