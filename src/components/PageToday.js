@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import UserContext from "../contexts/UserContext";
 import axios from "axios";
 import { IoCheckbox } from "react-icons/io5";
@@ -9,6 +9,7 @@ import "dayjs/locale/pt-br";
 
 function Habit({ habit }) {
   const { userInfo, updateHabitsList, setUpdateHabitsList } = useContext(UserContext);
+  const [isDisabled, setIsDisabled] = useState("");
 
   const iconDoneColor = habit.done ? "#8fc549" : "#EBEBEB";
   const currentSequenceColor = habit.done ? "#8fc549" : "#666666";
@@ -24,24 +25,38 @@ function Habit({ habit }) {
     };
 
     if (!habit.done) {
+      setIsDisabled("none");
       const promise = axios.post(`${API}/${habit.id}/check`, body, config);
       promise
         .then(() => {
           setUpdateHabitsList(!updateHabitsList);
+          setIsDisabled("");
         })
         .catch((error) => {
-          console.log(error);
-          alert(error.response.data.message);
+          if(error.response.status === 400) {
+            alert("O hábito já está marcado!");
+          }
+          setIsDisabled("");
+          // setIsDisabled("");
+          // console.log(error);
+          // alert(error.response.data.message);
         });
     } else {
+      setIsDisabled("none");
       const promise = axios.post(`${API}/${habit.id}/uncheck`, body, config);
       promise
         .then(() => {
           setUpdateHabitsList(!updateHabitsList);
+          setIsDisabled("");
         })
         .catch((error) => {
-          console.log(error);
-          alert(error.response.data.message);
+          if(error.response.status === 400) {
+            alert("O hábito não está marcado!");
+          }
+          setIsDisabled("");
+          // setIsDisabled("");
+          // console.log(error);
+          // alert(error.response.data.message);
         });
     }
   }
@@ -57,7 +72,7 @@ function Habit({ habit }) {
       </p>
       <IconContext.Provider value={{ size: "82px", color: iconDoneColor, title: "Marcar hábito como feito" }}>
         <IonIcon>
-          <IoCheckbox onClick={selectHabit} />
+          <IoCheckbox style={{pointerEvents: isDisabled}} onClick={selectHabit} />
         </IonIcon>
       </IconContext.Provider>
     </ContainerHabit>
@@ -65,7 +80,7 @@ function Habit({ habit }) {
 }
 
 export default function PageToday() {
-  const { userInfo, habitsToday, setHabitsToday, updateHabitsList } = useContext(UserContext);
+  const { userInfo, habitsToday, setHabitsToday, updateHabitsList, progress, updateProgress } = useContext(UserContext);
 
   let updateLocale = require("dayjs/plugin/updateLocale");
   dayjs.extend(updateLocale);
@@ -86,21 +101,19 @@ export default function PageToday() {
     const promise = axios.get(API, config);
     promise
       .then((response) => {
-        console.log(response.data);
         setHabitsToday(response.data);
+        updateProgress(response.data);
       })
       .catch((error) => {
-        console.log(error);
+        alert(error.response.data.message);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateHabitsList]);
 
   function RenderSubtitle() {
-    const habitsDone = habitsToday.filter((habit) => habit.done);
-    if (habitsDone.length === 0) return <p>Nenhum hábito concluído ainda</p>;
+    if (progress === "" || progress === "0") return <p>Nenhum hábito concluído ainda</p>;
     else {
-      const percHabitsDone = ((habitsDone.length / habitsToday.length) * 100).toFixed(0);
-      return <p style={{ color: "#8FC549" }}>{percHabitsDone}% dos hábitos concluídos</p>;
+      return <p style={{ color: "#8FC549" }}>{progress}% dos hábitos concluídos</p>;
     }
   }
 
@@ -166,8 +179,6 @@ const ContainerHabit = styled.div`
   position: relative;
 
   h6 {
-    /* font-family: "Lexend Deca", sans-serif;
-    font-weight: 400; */
     font-size: 19.976px;
     line-height: 25px;
     margin-bottom: 7px;
@@ -177,14 +188,6 @@ const ContainerHabit = styled.div`
     font-size: 12.976px;
     line-height: 16px;
   }
-
-  /* span:nth-child(1) {
-    color: ${(props) => (props.isDone ? "#8fc549" : "#666666")};
-  }
-
-  span:last-child {
-    color: ${(props) => (props.equaledRecord ? "#8fc549" : "#666666")};
-  }  */
 `;
 
 const IonIcon = styled.div`

@@ -34,7 +34,6 @@ export default function SignUp() {
               navigate("/");
             })
             .catch((error) => {
-              console.log(error);
               alert(error.response.data.message);
               setIsDisabled(false);
             });
@@ -89,7 +88,7 @@ export default function SignUp() {
           {isDisabled ? <ThreeDots color="#ffffff" width={51} height={51} /> : "Cadastrar"}
         </button>
       </form>
-      <Link to="/">
+      <Link to="/" style={{pointerEvents: isDisabled ? "none" : ""}}>
         <h6>Já tem uma conta? Faça login!</h6>
       </Link>
     </Container>

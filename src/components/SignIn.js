@@ -42,7 +42,6 @@ export default function SignIn() {
     if(userInfos !== null) {
       userInfos = JSON.parse(userInfos);
       setUserInfo({photo: userInfos.image, token: userInfos.token});
-      console.log("redirecionando...");
       navigate("/hoje");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -63,14 +62,12 @@ export default function SignIn() {
       promise
         .then((response) => {
           const userData = JSON.stringify(response.data);
-          console.log(userData);
           localStorage.setItem("userInfos", userData);
           setUserInfo({photo: response.data.image, token: response.data.token});
           // setUserInfo({photo: response.data.image, token: response.data.token});
           navigate("/hoje");
         })
         .catch((error) => {
-          // console.log(error);
           alert(error.response.data.message);
           setIsDisabled(false);
         });
@@ -103,7 +100,7 @@ export default function SignIn() {
           {isDisabled ? <ThreeDots color="#ffffff" width={51} height={51} /> : "Entrar"}
         </button>
       </form>
-      <Link to="/cadastro">
+      <Link to="/cadastro" style={{pointerEvents: isDisabled ? "none" : ""}}>
         <h6>Não tem uma conta? Cadastre-se!</h6>
       </Link>
     </Container>

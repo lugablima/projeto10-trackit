@@ -36,11 +36,10 @@ function Habit({ habit }) {
       const promise = axios.delete(`${API}/${habit.id}`, config);
       promise
         .then((response) => {
-          console.log(response);
           setUpdateHabitsList(!updateHabitsList);
         })
         .catch((error) => {
-          console.log(error);
+          alert(error.response.data.message);
         });
     }
   }

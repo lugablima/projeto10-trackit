@@ -16,6 +16,16 @@ export default function App() {
   const [newHabit, setNewHabit] = useState({name: "", days: daysWeek.map((day) => ({ ...day }))});
   const [habitsToday, setHabitsToday] = useState([]);
   const [updateHabitsList, setUpdateHabitsList] = useState(false);
+  const [progress, setProgress] = useState("");
+
+  function updateProgress(habitsToday) {
+    const habitsDone = habitsToday.filter((habit) => habit.done);
+    if (habitsDone.length === 0) setProgress("0");
+    else {
+      const percHabitsDone = ((habitsDone.length / habitsToday.length) * 100).toFixed(0);
+      setProgress(percHabitsDone);
+    }
+  }
 
   return (
     <>
@@ -31,6 +41,9 @@ export default function App() {
             setUpdateHabitsList,
             newHabit, 
             setNewHabit,
+            progress,
+            setProgress,
+            updateProgress,
           }}
         >
           <Header />
@@ -47,40 +60,3 @@ export default function App() {
     </>
   );
 }
-
-// export default function App() {
-//   const [userInfo, setUserInfo] = useState({ photo: "", token: "" });
-//   const [habitsToday, setHabitsToday] = useState([]);
-//   const [updateHabitsList, setUpdateHabitsList] = useState(false);
-//   const [progressPercentage, setProgressPercentage] = useState(null);
-
-//   return (
-//     <>
-//       <GlobalStyle />
-//       <BrowserRouter>
-//         <UserContext.Provider
-//           value={{
-//             userInfo,
-//             setUserInfo,
-//             habitsToday,
-//             setHabitsToday,
-//             updateHabitsList,
-//             setUpdateHabitsList,
-//             progressPercentage,
-//             setProgressPercentage,
-//           }}
-//         >
-//           <Header />
-//           <Routes>
-//             <Route path="/" element={<SignIn />} />
-//             <Route path="/cadastro" element={<SignUp />} />
-//             <Route path="/habitos" element={<HabitsPage />} />
-//             <Route path="/hoje" element={<PageToday />} />
-//             <Route path="/historico" element={<HistoryPage />} />
-//           </Routes>
-//           <Menu />
-//         </UserContext.Provider>
-//       </BrowserRouter>
-//     </>
-//   );
-// }

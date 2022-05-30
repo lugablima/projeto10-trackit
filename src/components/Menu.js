@@ -7,19 +7,8 @@ import { useContext } from "react";
 import UserContext from "../contexts/UserContext";
 
 export default function Menu() {
-  const { habitsToday } = useContext(UserContext);
+  const { progress } = useContext(UserContext);
   const location = useLocation();
-
-  function updatePercentage() {
-    const habitsDone = habitsToday.filter((habit) => habit.done);
-    if (habitsDone.length === 0) return "0";
-    else {
-      const percHabitsDone = ((habitsDone.length / habitsToday.length) * 100).toFixed(0);
-      return percHabitsDone;
-    }
-  }
-
-  const progressPercentage = updatePercentage();
 
   function RenderMenu() {
     if (location.pathname === "/" || location.pathname === "/cadastro") {
@@ -33,7 +22,7 @@ export default function Menu() {
           <Link to="/hoje">
             <div>
               <CircularProgressbar
-                value={progressPercentage}
+                value={progress}
                 text={"Hoje"}
                 background
                 backgroundPadding={6}
