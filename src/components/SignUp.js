@@ -15,34 +15,39 @@ export default function SignUp() {
 
   function handleForm(event) {
     event.preventDefault();
+    const password = inputs.password.trim();
     if (validateEmail(inputs.email)) {
-      if (validateName(inputs.name)) {
-        if (validatePhoto(inputs.image)) {
-          setIsDisabled(true);
-          const API = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up";
+      if (password !== "") {
+        if (validateName(inputs.name)) {
+          if (validatePhoto(inputs.image)) {
+            setIsDisabled(true);
+            const API = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up";
 
-          const body = {
-            email: inputs.email,
-            name: inputs.name,
-            image: inputs.image,
-            password: inputs.password,
-          };
+            const body = {
+              email: inputs.email,
+              name: inputs.name,
+              image: inputs.image,
+              password: password,
+            };
 
-          const promise = axios.post(API, body);
-          promise
-            .then((response) => {
-              alert("Usuário(a) cadastrado(a) com sucesso!");
-              navigate("/");
-            })
-            .catch((error) => {
-              alert(error.response.data.message);
-              setIsDisabled(false);
-            });
+            const promise = axios.post(API, body);
+            promise
+              .then((response) => {
+                alert("Usuário(a) cadastrado(a) com sucesso!");
+                navigate("/");
+              })
+              .catch((error) => {
+                alert(error.response.data.message);
+                setIsDisabled(false);
+              });
+          } else {
+            alert("URL da foto inválida, tente novamente!");
+          }
         } else {
-          alert("URL da foto inválida, tente novamente!");
+          alert("Nome inválido, tente novamente!");
         }
       } else {
-        alert("Nome inválido, tente novamente!");
+        alert("Senha inválida, tente novamente!");
       }
     } else {
       alert("Email inválido, tente novamente!");
@@ -89,7 +94,7 @@ export default function SignUp() {
           {isDisabled ? <ThreeDots color="#ffffff" width={51} height={51} /> : "Cadastrar"}
         </button>
       </form>
-      <Link to="/" style={{pointerEvents: isDisabled ? "none" : ""}}>
+      <Link to="/" style={{ pointerEvents: isDisabled ? "none" : "" }}>
         <h6>Já tem uma conta? Faça login!</h6>
       </Link>
     </Container>

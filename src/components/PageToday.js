@@ -38,9 +38,6 @@ function Habit({ habit }) {
             alert("O hábito já está marcado!");
           }
           setIsDisabled("");
-          // setIsDisabled("");
-          // console.log(error);
-          // alert(error.response.data.message);
         });
     } else {
       setIsDisabled("none");
@@ -55,9 +52,6 @@ function Habit({ habit }) {
             alert("O hábito não está marcado!");
           }
           setIsDisabled("");
-          // setIsDisabled("");
-          // console.log(error);
-          // alert(error.response.data.message);
         });
     }
   }
@@ -193,6 +187,9 @@ const ContainerHabit = styled.div`
   position: relative;
 
   h6 {
+    width: calc(100% - 100px);
+    word-wrap: break-word;
+    word-break: break-all;
     font-size: 19.976px;
     line-height: 25px;
     margin-bottom: 7px;

@@ -87,6 +87,9 @@ const ContainerHabit = styled.div`
   position: relative;
 
   h6 {
+    width: calc(100% - 35px);
+    word-wrap: break-word;
+    word-break: break-all;
     font-family: "Lexend Deca", sans-serif;
     font-weight: 400;
     font-size: 19.976px;

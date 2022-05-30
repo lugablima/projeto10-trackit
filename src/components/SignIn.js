@@ -13,30 +13,6 @@ export default function SignIn() {
   const [isDisabled, setIsDisabled] = useState(false);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   let userInfos = localStorage.getItem("userInfos");
-  //   if(userInfos !== null) {
-  //     userInfos = JSON.parse(userInfos);
-  //     const API = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
-
-  //     const body = {
-  //       email: userInfos.email,
-  //       password: userInfos.password,
-  //     };
-
-  //     const promise = axios.post(API, body);
-  //     promise
-  //       .then((response) => {
-  //         setUserInfo({photo: response.data.image, token: response.data.token});
-  //         console.log("redirecionando...");
-  //         navigate("/hoje");
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   }
-  // },[]);
-
   useEffect(() => {
     let userInfos = localStorage.getItem("userInfos");
     if(userInfos !== null) {
@@ -64,7 +40,6 @@ export default function SignIn() {
           const userData = JSON.stringify(response.data);
           localStorage.setItem("userInfos", userData);
           setUserInfo({photo: response.data.image, token: response.data.token});
-          // setUserInfo({photo: response.data.image, token: response.data.token});
           navigate("/hoje");
         })
         .catch((error) => {
