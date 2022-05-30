@@ -13,6 +13,7 @@ export default function HistoryPage() {
   const [historyHabits, setHistoryHabits] = useState([]);
   const [value, onChange] = useState(dayjs().$d);
   const [historyDay, setHistoryDay] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const API = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily";
@@ -25,6 +26,7 @@ export default function HistoryPage() {
     promise
       .then((response) => {
         setHistoryHabits(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         alert(error.response.data.message);
@@ -58,7 +60,7 @@ export default function HistoryPage() {
   return (
     <Container>
       <h6>Histórico</h6>
-      {historyHabits.length === 0 ? (
+      {loading ? (
         <LoadingContainer>
           <ThreeDots color="#ffffff" width={70} height={70} />
         </LoadingContainer>

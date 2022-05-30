@@ -82,6 +82,7 @@ function Habit({ habit }) {
 
 export default function PageToday() {
   const { userInfo, habitsToday, setHabitsToday, updateHabitsList, progress, updateProgress } = useContext(UserContext);
+  const [loading, setLoading] = useState(true);
 
   let updateLocale = require("dayjs/plugin/updateLocale");
   dayjs.extend(updateLocale);
@@ -104,6 +105,7 @@ export default function PageToday() {
       .then((response) => {
         setHabitsToday(response.data);
         updateProgress(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         alert(error.response.data.message);
@@ -140,13 +142,13 @@ export default function PageToday() {
       <h6>
         {weekDay}, {month}
       </h6>
-      {habitsToday.length === 0 ? (
+      {subtitle}
+      {loading ? (
         <LoadingContainer>
           <ThreeDots color="#ffffff" width={70} height={70} />
         </LoadingContainer>
       ) : (
         <>
-          {subtitle}
           {habits}
         </>
       )}
